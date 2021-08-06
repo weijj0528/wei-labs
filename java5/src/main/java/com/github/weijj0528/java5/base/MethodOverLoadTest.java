@@ -2,6 +2,8 @@ package com.github.weijj0528.java5.base;
 
 /**
  * 方法重载测试
+ * 方法名称相同参数列表不同即为方法重载
+ * 如方法名称相同参数列表相同返回类型不同则编译出错
  */
 public class MethodOverLoadTest {
 
@@ -28,5 +30,10 @@ public class MethodOverLoadTest {
     public int test(Integer a, int b) {
         return 1;
     }
+
+//  返回类型不做为方法重载标准
+//  public Integer test(Integer a, int b) {
+//      return 0;
+//  }
 
 }
