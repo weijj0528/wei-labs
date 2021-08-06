@@ -36,4 +36,9 @@ public class MethodOverLoadTest {
 //      return 0;
 //  }
 
+    public MethodOverLoadTest test(Integer a) {
+        System.out.println("父类方法");
+        return new MethodOverrideTest();
+    }
+
 }
