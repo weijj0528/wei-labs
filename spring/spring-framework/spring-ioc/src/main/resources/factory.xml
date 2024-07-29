@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.weiun.spring.ioc.bean.PostService"/>
+
+    <bean class="com.weiun.spring.ioc.bean.User" init-method="init" destroy-method="finish">
+        <constructor-arg name="name" value="weiun"/>
+        <constructor-arg name="age" value="19"/>
+    </bean>
+</beans>

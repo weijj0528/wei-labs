@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.weiun.springtx.jta"/>
+
+    <!--数据源1-->
+    <bean id="dataSource1" class="com.atomikos.jdbc.AtomikosDataSourceBean">
+        <property name="uniqueResourceName" value="mysql-test0"/>
+        <property name="xaDataSourceClassName" value="com.mysql.cj.jdbc.MysqlXADataSource"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="url">
+                    jdbc:mysql://localhost:3306/test0?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8
+                </prop>
+                <prop key="user">root</prop>
+                <prop key="password">12345678</prop>
+            </props>
+        </property>
+    </bean>
+    <!--数据源2-->
+    <bean id="dataSource2" class="com.atomikos.jdbc.AtomikosDataSourceBean">
+        <property name="uniqueResourceName" value="mysql-test1"/>
+        <property name="xaDataSourceClassName" value="com.alibaba.druid.pool.xa.DruidXADataSource"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="driverClassName">com.mysql.cj.jdbc.Driver</prop>
+                <prop key="url">
+                    jdbc:mysql://localhost:3306/test1?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8
+                </prop>
+                <prop key="username">root</prop>
+                <prop key="password">12345678</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="jdbcTemplate1" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource1"/>
+    </bean>
+
+    <bean id="jdbcTemplate2" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource2"/>
+    </bean>
+
+    <!--事务实现-->
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+        <property name="transactionTimeout" value="300"/>
+    </bean>
+
+    <!--Spring事务配置-->
+    <bean id="txManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="userTransaction" ref="atomikosUserTransaction"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+</beans>
